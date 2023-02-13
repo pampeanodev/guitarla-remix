@@ -1,6 +1,7 @@
 import { getPost } from "../../models/posts.server"
 import styles from '~/styles/blog.css'
 import { useLoaderData } from "@remix-run/react"
+import { formatearFecha } from "../../utils/helpers"
 
 export async function loader({params}){
   const { postUrl } = params
@@ -32,21 +33,22 @@ export function meta({data}) {
     }
   }
   return {
-    title: `GuitarLA - ${data.data[0].attributes.nombre}`,
-    description: `Posts, blog de guitarras, post ${data.data[0].attributes.nombre}`
+    title: `GuitarLA - ${data.data[0].attributes.titulo}`,
+    description: `Posts, blog de guitarras, post ${data.data[0].attributes.titulo}`
   }
 }
 
 const PostUrl = () => {
   const post = useLoaderData()
 
-  const { titulo, contenido, imagen, publishedAt, url} = post.data[0].attributes
+  const { titulo, contenido, imagen, publishedAt} = post.data[0].attributes
   
   return (
-    <main className="contenedor post">
-      <img className="imagen" src={imagen.data.attributes.url} alt={`Imagen del post ${titulo}`} />
+    <main className="contenedor post mt-3">
+      <img className="imagen" src={imagen?.data?.attributes?.url} alt={`Imagen del post ${titulo}`} />
       <div className="contenido">
         <h3>{titulo}</h3>
+        <p className="fecha">{formatearFecha(publishedAt)}</p>
         <p className="texto">{contenido}</p>
       </div>
     </main>
