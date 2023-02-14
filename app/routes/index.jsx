@@ -36,7 +36,6 @@ export async function loader() {
     getPosts(),
     getCurso()
   ])
-  console.log(curso.data.attributes)
 
   return {
     guitarras: guitarras.data,
