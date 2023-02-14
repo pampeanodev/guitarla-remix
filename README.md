@@ -1,6 +1,8 @@
-# Welcome to Remix!
+# GuitarLA - Remix
 
 - [Remix Docs](https://remix.run/docs)
+- Strapi consumption
+- Routing via remix
 
 ## Development
 
