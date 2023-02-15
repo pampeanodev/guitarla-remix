@@ -7,6 +7,7 @@ import {
   useCatch,
   Link
 } from '@remix-run/react'
+import { useState } from 'react'
 import Header from '~/components/header'
 import styles from '~/styles/index.css'
 import Footer from './components/footer'
@@ -48,9 +49,29 @@ export function links() {
 }
 
 export default function App(){
+
+  const [carrito, setCarrito] = useState([])
+  const agregarAlCarrito = (guitarra) => {
+    if(carrito.some(guitarraState => guitarraState.id === guitarra.id)) {
+      const carritoActualizado = carrito.map(guitarraState => {
+        if(guitarraState.id === guitarra.id){
+          // sobreescribir existente
+          guitarraState.cantidad = guitarra.cantidad
+        }
+        return guitarraState
+      })
+      setCarrito(carritoActualizado)
+    } else {
+      // registro nuevo
+      setCarrito([...carrito, guitarra])
+    }
+  }
+
   return (
     <Document>
-      <Outlet />
+      <Outlet context={{
+        agregarAlCarrito
+      }}/>
     </Document>
   )
 }
