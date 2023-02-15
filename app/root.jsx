@@ -7,7 +7,7 @@ import {
   useCatch,
   Link
 } from '@remix-run/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from '~/components/header'
 import styles from '~/styles/index.css'
 import Footer from './components/footer'
@@ -44,13 +44,19 @@ export function links() {
     {
       rel: 'stylesheet',
       href: styles
-    }    
+    }
   )
 }
 
 export default function App(){
 
-  const [carrito, setCarrito] = useState([])
+  const carritoInitial = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('carrito')) ?? [] : null
+  const [carrito, setCarrito] = useState(carritoInitial)
+
+  useEffect(() => {
+    localStorage.setItem('carrito', JSON.stringify(carrito))
+  }, [carrito])  
+
   const agregarAlCarrito = (guitarra) => {
     if(carrito.some(guitarraState => guitarraState.id === guitarra.id)) {
       const carritoActualizado = carrito.map(guitarraState => {
@@ -67,10 +73,28 @@ export default function App(){
     }
   }
 
+  const actualizarCantidad = guitarra => {
+      const carritoActualizado = carrito.map(guitarraState => {
+        if(guitarraState.id === guitarra.id){
+          guitarraState.cantidad = guitarra.cantidad
+        }
+        return guitarraState
+      })
+      setCarrito(carritoActualizado)
+  }
+
+  const eliminarGuitarra = id => {
+    const carritoActualizado = carrito.filter(guitarraState => guitarraState.id !== id)
+    setCarrito(carritoActualizado)
+  }
+
   return (
     <Document>
       <Outlet context={{
-        agregarAlCarrito
+        agregarAlCarrito,
+        actualizarCantidad,
+        eliminarGuitarra,
+        carrito
       }}/>
     </Document>
   )
